@@ -1,36 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
+import SearchForm from './components/SearchForm';
+import Title from './components/Title';
+import Weather from './components/Weather';
 
 // Please don't judge me
 const API_KEY = '60963678e959b53f337ac73043772f2e';
-
-const Title = props => {
-  return (
-    <div>
-      {props.city && <h2>Your city is {props.city}</h2>}
-    </div>
-  );
-}
-
-const SearchForm = props => {
-  return (
-    <form onSubmit={props.getWeather}>
-      <input type="text" name="city" placeholder="City"/>
-      <button>Get Weather</button>
-    </form>
-  );
-}
-
-const Weather = props => {
-  return (
-    <div>
-      {props.temp && props.desc && <p>Weather details</p>}
-      {props.temp && <p>Temperature C&#176;: {props.toCelcius(props.temp)}&#176;</p>}
-      {props.desc && <p>Descripiton: {props.desc}</p>}
-    </div>
-
-  );
-}
 
 class App extends Component {
   state = {
@@ -48,7 +23,17 @@ class App extends Component {
     this.setState({
       city: weatherData.name,
       temp: weatherData.main.temp,
-      desc: weatherData.weather[0].description
+      desc: weatherData.weather[0].description,
+    })
+  }
+
+  getCityImages = async () => {
+    const city = this.state.city.toLowerCase();
+    const api_data = await fetch(`https://api.teleport.org/api/urban_areas/slug:${city}/images/`);
+    const imageData = await api_data.json();
+    const cityImage = imageData.photos[0].image.mobile;
+    this.setState({
+      img: cityImage
     })
   }
 
@@ -59,7 +44,9 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <p>Weather Seeker</p>
+        <p onClick={this.getCityImages}>Weather Seeker</p>
+        <img src={this.state.img} alt="" width='160px'/>
+
         <SearchForm getWeather={this.getWeather}/>
         <Title city={this.state.city}/>
         <Weather 
