@@ -16,7 +16,7 @@ class App extends Component {
 
   getWeather = async (e) => {
     e.preventDefault();
-    
+
     const city = e.target.city.value.toLowerCase();
     const data = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
     const weatherData = await data.json();
@@ -26,30 +26,46 @@ class App extends Component {
     const imageData = await api_data.json();
     const cityImage = imageData.photos[0].image.mobile;
 
-    this.setState({
-      city: weatherData.name,
-      temp: weatherData.main.temp,
-      desc: weatherData.weather[0].description,
-      img: cityImage
-    })
+    if(city) {
+      this.setState({
+        city: weatherData.name,
+        temp: weatherData.main.temp,
+        desc: weatherData.weather[0].description,
+        img: cityImage
+      })
+    } else {
+      this.setState({
+        error: 'Please enter city.'
+      })
+    }
+
+
   }
 
-  toCelcius = f => {
+  convertToCelcius = f => {
     return Math.round(f-273.15);
   }
 
   render() {
     return (
-      <div className="App">
-        <p>Weather Seeker</p>
-        <img src={this.state.img} alt="" width='160px'/>
-        <SearchForm getWeather={this.getWeather}/>
-        <Title city={this.state.city}/>
-        <Weather 
-          toCelcius={this.toCelcius}
-          temp={this.state.temp}
-          desc={this.state.desc}
-        />
+      <div className="App container">
+        <div className="row">
+          <div className="col-sm-6">
+            <div>
+              <img className="img-responsive" src={this.state.img} alt={this.state.city}/>
+            </div>
+          </div>
+          <div className="col-sm-6">
+            <p className="header">Weather Seeker</p>
+            <SearchForm getWeather={this.getWeather}/>
+            <Title city={this.state.city}/>
+            <Weather 
+              convertToCelcius={this.convertToCelcius}
+              temp={this.state.temp}
+              desc={this.state.desc}
+            />
+          </div>
+        </div>
       </div>
     );
   }
