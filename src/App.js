@@ -16,37 +16,33 @@ class App extends Component {
 
   getWeather = async (e) => {
     e.preventDefault();
-    const city = e.target.city.value;
+    
+    const city = e.target.city.value.toLowerCase();
     const data = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}`);
     const weatherData = await data.json();
+
+    // request for city image
+    const api_data = await fetch(`https://api.teleport.org/api/urban_areas/slug:${city}/images/`);
+    const imageData = await api_data.json();
+    const cityImage = imageData.photos[0].image.mobile;
 
     this.setState({
       city: weatherData.name,
       temp: weatherData.main.temp,
       desc: weatherData.weather[0].description,
-    })
-  }
-
-  getCityImages = async () => {
-    const city = this.state.city.toLowerCase();
-    const api_data = await fetch(`https://api.teleport.org/api/urban_areas/slug:${city}/images/`);
-    const imageData = await api_data.json();
-    const cityImage = imageData.photos[0].image.mobile;
-    this.setState({
       img: cityImage
     })
   }
 
-  toCelcius = (f) => {
+  toCelcius = f => {
     return Math.round(f-273.15);
   }
 
   render() {
     return (
       <div className="App">
-        <p onClick={this.getCityImages}>Weather Seeker</p>
+        <p>Weather Seeker</p>
         <img src={this.state.img} alt="" width='160px'/>
-
         <SearchForm getWeather={this.getWeather}/>
         <Title city={this.state.city}/>
         <Weather 

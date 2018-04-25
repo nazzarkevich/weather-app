@@ -4,7 +4,7 @@ const SearchForm = props => {
     return (
       <form onSubmit={props.getWeather}>
         <input type="text" name="city" placeholder="City"/>
-        <button>Get Weather</button>
+        <button >Get Weather</button>
       </form>
     );
   }
