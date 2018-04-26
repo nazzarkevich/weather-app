@@ -1,1 +1,2 @@
-Simple weather app created with React and OpenWeatherMap API.
+Weather app created with React. 
+It uses OpenWeatherMap API + Teleport API for weather conditions and city images.
