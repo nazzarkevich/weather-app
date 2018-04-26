@@ -51,8 +51,19 @@ class App extends Component {
       <div className="App container">
         <div className="row">
           <div className="col-sm-6">
-            <div>
-              <img className="img-responsive" src={this.state.img} alt={this.state.city}/>
+            <div className="img-wrapper">
+              {this.state.img 
+              ? <img 
+                className="img-responsive city-img center-block" 
+                src={this.state.img} 
+                alt={this.state.city}/>
+              : <div>
+                  <h2 className="header">Check weather now !</h2>
+                  <img 
+                    className="img-responsive city-img center-block" 
+                    src={require("./assets/img/weather-cloud.svg")}
+                    alt="weather-image" />
+                </div>}
             </div>
           </div>
           <div className="col-sm-6">
